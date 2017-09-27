@@ -1,0 +1,25 @@
+<h1>Qangaroo連携</h1>
+<%= form_for @service do |f| %>
+  <field>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </field>
+  <field>
+    <%= f.label :namespace %>
+    <%= f.text_field :namespace %>
+  </field>
+  <field>
+    <%= f.label :api_key %>
+    <%= f.text_field :api_key %>
+  </field>
+  <%= f.submit %>
+<% end %>
+
+<% @services.each do |service| %>
+  <ul>
+    <li><%= "Name: #{service.name}" %></li>
+    <li>Namespace: <%= link_to service.namespace, "http://#{service.namespace}" %></li>
+    <li><%= "API Key: #{service.api_key}" %></li>
+  </ul>
+  <%= link_to "Delete #{service.name}", destroy_service_path(service.id), method: :delete, data: {confirm: "Are you sure you want to delete?"} %>
+<% end %>
