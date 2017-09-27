@@ -1,6 +1,6 @@
 class ServicesController < ApplicationController
   unloadable
-  before_action :load_service, only: [:edit, :update, :destroy]
+  before_action :load_service, only: [:edit, :update, :destroy, :get_qangaroo_data]
 
   def index
     @services = Service.all
@@ -29,6 +29,17 @@ class ServicesController < ApplicationController
   def destroy
     @service.destroy
     redirect_to root_url
+  end
+
+  def get_qangaroo_data
+    get_url = @service.namespace
+    token = @service.api_key
+    headers = { "X-USER-TOKEN" => @service.api_key, "Content-Type" => "application/json"}
+    response = HTTParty.get("http://#{get_url}/api/v1/issues/generate_issue_data", :headers => headers)
+    if response.response.class == Net::HTTPOK
+      binding.pry
+      @data = response.parsed_response
+    end
   end
 
   private

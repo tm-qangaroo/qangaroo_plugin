@@ -22,4 +22,5 @@
     <li><%= "API Key: #{service.api_key}" %></li>
   </ul>
   <%= link_to "Delete #{service.name}", destroy_service_path(service.id), method: :delete, data: {confirm: "Are you sure you want to delete?"} %>
+  <%= link_to "Get Qangaroo Projects", get_qangaroo_data_path(service.id) %>
 <% end %>
