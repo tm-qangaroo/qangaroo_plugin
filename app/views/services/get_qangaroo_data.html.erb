@@ -1,1 +1,20 @@
-<%= @data %>
+<%# @data %>
+<% @data.each do |f| %>
+  <div>
+    <h2><%= f.keys.first %></h2>
+    <table>
+      <tr>
+        <th>Qangaroo</th>
+        <th>Value</th>
+      </tr>
+      <% f.values.first.values.each do |bug_data| %>
+        <% bug_data.each do |bug_key, bug_value| %>
+          <tr>
+            <td><%= bug_key %></td>
+            <td><%= bug_value %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </table>
+  </div>
+<% end %>

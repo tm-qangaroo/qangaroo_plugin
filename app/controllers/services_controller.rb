@@ -39,6 +39,9 @@ class ServicesController < ApplicationController
     if response.response.class == Net::HTTPOK
       binding.pry
       @data = response.parsed_response
+    else
+      flash[:error] = "There was an error trying to get your Qangaroo data!"
+      redirect_to root_url
     end
   end
 
