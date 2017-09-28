@@ -1,1 +1,20 @@
 <h1>This is the Qangaroo Data Settings Page</h1>
+<table>
+  <tbody>
+    <tr>
+      <th>Priority Settings</th>
+      <% IssuePriority.all.each do |f| %>
+        <tr>
+          <td>
+            <%= f.name %>
+          </td>
+          <td>
+            <input type="text" id="<%= f.name %>"
+                               value="<%= settings[f.name] %>"
+                               name="<%= settings[f.name] %>" >
+         </td>
+        </tr>
+      <% end %>
+    </tr>
+  </tbody>
+</table>

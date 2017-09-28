@@ -38,11 +38,17 @@ class ServicesController < ApplicationController
     response = HTTParty.get("http://#{get_url}/api/v1/issues/generate_issue_data", :headers => headers)
     if response.response.class == Net::HTTPOK
       binding.pry
+      @projects = Project.visible.sorted
       @data = response.parsed_response
     else
       flash[:error] = "There was an error trying to get your Qangaroo data!"
       redirect_to root_url
     end
+  end
+
+  def register_issue
+    binding.pry
+    #Start work on registering the issues. Perhaps through numbers instead of Japanese?
   end
 
   private

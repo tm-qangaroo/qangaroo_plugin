@@ -2,19 +2,26 @@
 <% @data.each do |f| %>
   <div>
     <h2><%= f.keys.first %></h2>
-    <table>
-      <tr>
-        <th>Qangaroo</th>
-        <th>Value</th>
-      </tr>
       <% f.values.first.values.each do |bug_data| %>
+      <table>
+        <tr>
+          <th>Qangaroo</th>
+          <th>Value</th>
+        </tr>
         <% bug_data.each do |bug_key, bug_value| %>
           <tr>
             <td><%= bug_key %></td>
             <td><%= bug_value %></td>
           </tr>
         <% end %>
+      </table>
+      <%= form_tag(register_issue_path) do %>
+        <% bug_data.each do |bug_key, bug_value| %>
+          <%= hidden_field_tag bug_key, bug_value %>
+        <% end %>
+        <div>Create an issue for: <%= select_tag "project", options_from_collection_for_select(@projects, "id", "name")  %></div>
+        <%= submit_tag %>
       <% end %>
-    </table>
+    <% end %>
   </div>
 <% end %>
