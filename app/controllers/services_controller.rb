@@ -37,7 +37,6 @@ class ServicesController < ApplicationController
     headers = { "X-USER-TOKEN" => @service.api_key, "Content-Type" => "application/json"}
     response = HTTParty.get("http://#{get_url}/api/v1/issues/generate_issue_data", :headers => headers)
     if response.response.class == Net::HTTPOK
-      binding.pry
       @projects = Project.visible.sorted
       @data = response.parsed_response
     else
@@ -47,8 +46,23 @@ class ServicesController < ApplicationController
   end
 
   def register_issue
-    binding.pry
-    #Start work on registering the issues. Perhaps through numbers instead of Japanese?
+    @issue = Issue.new(
+      subject: params["タイトル"],
+      description: params["内容"],
+      start_date: params["報告日"].to_datetime,
+      project_id: params["project"],
+      priority_id: Service.get_priority(params["優先度"]),
+      tracker_id: Service.get_tracker(params["分類"]),
+      status_id: 1,
+      author_id: User.current.id
+    )
+    if @issue.save
+      flash[:notice] = "#{params["タイトル"]} bug has been successfully loaded into Redmine!"
+      redirect_to get_qangaroo_data_path
+    else
+      flash[:error] = "There was an issue with loading #{params["タイトル"]} into Redmine"
+      redirect_to get_qangaroo_data_path
+    end
   end
 
   private
