@@ -1,26 +1,45 @@
-<h1>Qangaroo連携</h1>
-<%= form_for @service do |f| %>
-  <field>
-    <%= f.label :name %>
-    <%= f.text_field :name %>
-  </field>
-  <field>
-    <%= f.label :namespace %>
-    <%= f.text_field :namespace %>
-  </field>
-  <field>
-    <%= f.label :api_key %>
-    <%= f.text_field :api_key %>
-  </field>
-  <%= f.submit %>
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag "plugin.css", :plugin => "qangaroo_plugin", :media => "screen" %>
 <% end %>
 
+<div class="header-bar">
+  <i class="fa fa-list-alt"></i>
+  <h1 class="header">Qangaroo連携</h1>
+</div>
+
+<div class="api-registry-div">
+  <%= form_for @service do |f| %>
+    <field>
+      <%= f.label :name, l(:field_name) %>
+      <%= f.text_field :name %>
+    </field>
+    <field>
+      <%= f.label :namespace, l(:namespace) %>
+      <%= f.text_field :namespace %>
+    </field>
+    <field>
+      <%= f.label :api_key, l(:api_key) %>
+      <%= f.text_field :api_key %>
+    </field>
+    <field>
+      <%= button_tag type: 'submit', class: "button my-button", id: "register-button" do %>
+        <i class="fa fa-cog fa-lg" aria-hidden="true"></i><%= l(:button_add) %>
+    <% end %>
+    </field>
+  <% end %>
+</div>
+
 <% @services.each do |service| %>
-  <ul>
-    <li><%= "Name: #{service.name}" %></li>
-    <li>Namespace: <%= link_to service.namespace, "http://#{service.namespace}" %></li>
-    <li><%= "API Key: #{service.api_key}" %></li>
-  </ul>
-  <%= link_to "Delete #{service.name}", destroy_service_path(service.id), method: :delete, data: {confirm: "Are you sure you want to delete?"} %>
-  <%= link_to "Get Qangaroo Projects", get_qangaroo_data_path(service.id) %>
+  <div class="api-info-div">
+    <h3><%= "#{service.name}" %></h3>
+    <hr>
+    <ul>
+      <li><%= "#{l(:namespace)}: http://#{service.namespace}" %></li>
+      <li><%= "#{l(:api_key)}: #{service.api_key}" %></li>
+    </ul>
+    <div class="api-info-buttons">
+      <%= link_to "#{l(:button_delete)}", destroy_service_path(service.id), method: :delete, data: {confirm: "Are you sure you want to delete?"}, class: "api-info-button" %>
+      <%= link_to "#{l(:button_qangaroo_connect)}", get_qangaroo_data_path(service.id), {class: "api-info-button"} %>
+    </div>
+  </div>
 <% end %>

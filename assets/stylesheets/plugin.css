@@ -1,0 +1,82 @@
+/*
+*= require font-awesome
+*/
+
+* {
+  box-sizing: border-box;
+}
+
+#content {
+  background-color: #F4F6FA;
+}
+
+.header-bar {
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #EEEEEE;
+  margin: -6px -10px -10px -10px;
+}
+
+.header-bar > .header {
+  padding: 10px 10px 0px;
+}
+
+.header {
+  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-weight: 100;
+}
+
+.api-registry-div {
+  padding: 10px;
+  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-weight: 100;
+}
+
+button#register-button {
+  padding: 5px 10px;
+  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 2px 2px 2px #BFBFC0;
+  cursor: pointer;
+  background-color: #BABABA;
+}
+
+field {
+  display: block;
+  padding: 10px
+}
+
+field > label {
+  display: block
+}
+
+.api-info-div {
+  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  background-color: #FFFFFF;
+  border: 1px solid #EEEEEE;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px;
+  overflow: auto;
+}
+
+.api-info-div li {
+  list-style-type: none;
+}
+
+.api-info-buttons {
+  float: right;
+  padding: 10px;
+}
+
+a.api-info-button {
+  padding: 5px 10px;
+  margin: 5px;
+  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 1px 1px 2px #BFBFC0;
+  cursor: pointer;
+  background-color: #BABABA;
+}

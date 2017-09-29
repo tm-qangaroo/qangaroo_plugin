@@ -1,3 +1,5 @@
 # English strings go here for Rails i18n
 en:
-  # my_label: "My label"
+  button_qangaroo_connect: "Connect with Qangaroo"
+  namespace: "Namespace"
+  api_key: "API Key"

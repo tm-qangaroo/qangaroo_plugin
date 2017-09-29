@@ -1,4 +1,7 @@
-<%# @data %>
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag "plugin.css", :media => "screen" %>
+<% end %>
+
 <% @data.each do |f| %>
   <div>
     <h2><%= f.keys.first %></h2>
