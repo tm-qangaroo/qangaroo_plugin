@@ -4,6 +4,11 @@
 
 * {
   box-sizing: border-box;
+  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+
+html {
+  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
 #content {
@@ -35,20 +40,30 @@ button#register-button {
   padding: 5px 10px;
   font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   color: white;
-  border-radius: 5px;
+  border-radius: 3px;
   border: none;
-  box-shadow: 2px 2px 2px #BFBFC0;
+  box-shadow: 1px 1px 1px #BFBFC0;
   cursor: pointer;
   background-color: #BABABA;
+  margin-top: 25px;
+  width: 50px
+}
+
+form#new_service {
+  display: flex;
+  justify-content: space-around;
 }
 
 field {
-  display: block;
-  padding: 10px
+  padding: 10px;
+  width: 100%;
 }
 
 field > label {
   display: block
+}
+field > input {
+  width: 90%;
 }
 
 .api-info-div {
@@ -56,7 +71,7 @@ field > label {
   background-color: #FFFFFF;
   border: 1px solid #EEEEEE;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 5px;
   margin: 10px;
   overflow: auto;
 }
@@ -75,8 +90,83 @@ a.api-info-button {
   margin: 5px;
   font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   color: white;
-  border-radius: 5px;
-  box-shadow: 1px 1px 2px #BFBFC0;
+  border-radius: 3px;
+  box-shadow: rgba(0, 0, 0, 0.298039) 0.7px 0.7px 0.7px 0.7px;
   cursor: pointer;
   background-color: #BABABA;
+}
+
+.project-info-div {
+  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  background-color: #FFFFFF;
+  border: 1px solid #EBEBEB;
+  padding: 10px;
+  margin: 20px 0 10px;
+  margin: 10px;
+  overflow: auto;
+}
+
+.bug-columns {
+  display: inline-block;
+  text-align: left;
+  width: 100%;
+}
+
+.bug-info-div {
+  text-align: center;
+  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  background-color: #FFFFFF;
+  border: 1px solid #EBEBEB;
+  padding: 10px;
+  margin: 20px 0 10px;
+  margin: 10px;
+  display: inline-block;
+  width: 45%;
+  vertical-align: top;
+}
+
+table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  border: 1px solid #EBEBEB;
+}
+
+table th {
+  background-color: #F5F5F6;
+  padding: 8px;
+  border: 1px solid #EBEBEB;
+}
+
+table td {
+  padding: 8px;
+  border: 1px solid #EBEBEB;
+}
+
+.qdata {
+  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+
+.create-issue-div {
+  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  background-color: #FFFFFF;
+  border: 1px solid #EBEBEB;
+  padding: 10px;
+  margin-top: 5px;
+  display: inline-block;
+  width: 100%;
+  vertical-align: top;
+}
+
+.create-ticket {
+  padding: 5px 10px;
+  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  color: white;
+  border-radius: 3px;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.298039) 0.7px 0.7px 0.7px 0.7px;
+  cursor: pointer;
+  background-color: #BABABA;
+  margin: 15px auto 5px;
+  display: block;
 }

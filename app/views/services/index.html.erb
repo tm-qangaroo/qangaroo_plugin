@@ -4,7 +4,7 @@
 
 <div class="header-bar">
   <i class="fa fa-list-alt"></i>
-  <h1 class="header">Qangaroo連携</h1>
+  <h1 class="header"><%= l(:heading_api_settings) %></h1>
 </div>
 
 <div class="api-registry-div">
@@ -21,17 +21,17 @@
       <%= f.label :api_key, l(:api_key) %>
       <%= f.text_field :api_key %>
     </field>
-    <field>
+    <div>
       <%= button_tag type: 'submit', class: "button my-button", id: "register-button" do %>
         <i class="fa fa-cog fa-lg" aria-hidden="true"></i><%= l(:button_add) %>
-    <% end %>
-    </field>
+      <% end %>
+    </div>
   <% end %>
 </div>
 
 <% @services.each do |service| %>
   <div class="api-info-div">
-    <h3><%= "#{service.name}" %></h3>
+    <h3 class="header"><%= "#{service.name}" %></h3>
     <hr>
     <ul>
       <li><%= "#{l(:namespace)}: http://#{service.namespace}" %></li>

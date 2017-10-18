@@ -1,4 +1,12 @@
+
 ja:
   button_qangaroo_connect: "Qangarooと連携する"
   namespace: "ネームスペース"
   api_key: "APIキー"
+  heading_api_settings: "連携設定"
+  heading_qangaroo_data: "Qangarooデーター"
+  button_create_ticket: "作成"
+  description_create_ticket: "チケット化したいプロジェクトを選択してください"
+  error_failed_api_connection: "API接続が失敗しました。"
+  successful_bug_load: "チケット化が成功しました。"
+  failed_bug_load: "チケット化が失敗しました。"

@@ -40,7 +40,7 @@ class ServicesController < ApplicationController
       @projects = Project.visible.sorted
       @data = response.parsed_response
     else
-      flash[:error] = "There was an error trying to get your Qangaroo data!"
+      flash[:error] = l(:error_failed_api_connection)
       redirect_to root_url
     end
   end
@@ -57,10 +57,10 @@ class ServicesController < ApplicationController
       author_id: User.current.id
     )
     if @issue.save
-      flash[:notice] = "#{params["タイトル"]} bug has been successfully loaded into Redmine!"
+      flash[:notice] = l(:successful_bug_load)
       redirect_to get_qangaroo_data_path
     else
-      flash[:error] = "There was an issue with loading #{params["タイトル"]} into Redmine"
+      flash[:error] = l(:failed_bug_load)
       redirect_to get_qangaroo_data_path
     end
   end
