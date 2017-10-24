@@ -7,3 +7,9 @@ delete '/delete_api_key/:id', to: "services#destroy", as: :destroy_service
 get '/get_qangaroo_data/:id', to: 'services#get_qangaroo_data', as: :get_qangaroo_data
 get '/show_qangaroo_data_path', to: "services#show_qangaroo_data", as: :show_qangaroo_data
 post '/post_issue/:id', to: "services#register_issue", as: :register_issue
+
+namespace :api do
+  namespace :v1 do
+    get '/services/verify_qangaroo_plugin', to: 'services#verify_qangaroo_plugin'
+  end
+end
