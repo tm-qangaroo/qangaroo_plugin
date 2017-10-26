@@ -6,8 +6,9 @@ module Api
       respond_to :json
 
       def verify_qangaroo_plugin
+        @redmine_version = Redmine::Info.versioned_name.match(/(\d.\d.\d)/)[1]
         @plugin = Redmine::Plugin.find(:qangaroo_plugin)
-        render json: @plugin
+        render json: {"plugin": @plugin, "redmine_version": @redmine_version}
       end
 
       def signal_success(msg=true)
