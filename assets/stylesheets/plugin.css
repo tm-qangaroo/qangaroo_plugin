@@ -30,25 +30,6 @@ html {
   font-weight: 100;
 }
 
-.api-registry-div {
-  padding: 10px;
-  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  font-weight: 100;
-}
-
-button#register-button {
-  padding: 5px 10px;
-  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  color: white;
-  border-radius: 3px;
-  border: none;
-  box-shadow: 1px 1px 1px #BFBFC0;
-  cursor: pointer;
-  background-color: #1ab394;
-  margin-top: 25px;
-  width: 50px
-}
-
 form#new_service {
   display: flex;
   justify-content: space-around;
@@ -72,7 +53,7 @@ field > input {
   border: 1px solid #EEEEEE;
   padding: 10px;
   border-radius: 5px;
-  margin: 10px;
+  margin: 30px 10px 10px;
   overflow: auto;
 }
 

@@ -7,28 +7,6 @@
   <h1 class="header"><%= l(:heading_api_settings) %></h1>
 </div>
 
-<div class="api-registry-div">
-  <%= form_for @service do |f| %>
-    <field>
-      <%= f.label :name, l(:field_name) %>
-      <%= f.text_field :name %>
-    </field>
-    <field>
-      <%= f.label :namespace, l(:namespace) %>
-      <%= f.text_field :namespace %>
-    </field>
-    <field>
-      <%= f.label :api_key, l(:api_key) %>
-      <%= f.text_field :api_key %>
-    </field>
-    <div>
-      <%= button_tag type: 'submit', class: "button my-button", id: "register-button" do %>
-        <i class="fa fa-cog fa-lg" aria-hidden="true"></i><%= l(:button_add) %>
-      <% end %>
-    </div>
-  <% end %>
-</div>
-
 <% @services.each do |service| %>
   <div class="api-info-div">
     <h3 class="header"><%= "#{service.name}" %></h3>
@@ -38,7 +16,6 @@
       <li><%= "#{l(:api_key)}: #{service.api_key}" %></li>
     </ul>
     <div class="api-info-buttons">
-      <%= link_to "#{l(:button_delete)}", destroy_service_path(service.id), method: :delete, data: {confirm: "Are you sure you want to delete?"}, class: "api-info-button" %>
       <%= link_to "#{l(:button_qangaroo_connect)}", get_qangaroo_data_path(service.id), {class: "api-info-button"} %>
     </div>
   </div>

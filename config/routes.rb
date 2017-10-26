@@ -12,5 +12,6 @@ namespace :api do
   namespace :v1 do
     get '/services/verify_qangaroo_plugin', to: 'services#verify_qangaroo_plugin', as: :api_verify_qangaroo_plugin
     get '/services/create_service', to: 'services#create_service'
+    get '/services/delete_service', to: 'services#delete_service'
   end
 end

@@ -30,6 +30,15 @@ module Api
         end
       end
 
+      def delete_service
+        qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
+        @service = Service.find_by(api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
+        if @service.destroy
+          signal_success("Successful Connection")
+        end
+
+      end
+
       private
       def authenticate_key
         key = request.headers['X-Redmine-API-Key']
