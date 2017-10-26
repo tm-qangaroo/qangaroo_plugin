@@ -33,12 +33,13 @@ class ServicesController < ApplicationController
 
   def get_qangaroo_data
     get_url = @service.namespace
-    token = @service.api_key
-    headers = { "X-USER-TOKEN" => @service.api_key, "Content-Type" => "application/json"}
+    token = User.current.api_key
+    headers = { "X-USER-TOKEN" => token, "Content-Type" => "application/json"}
     response = HTTParty.get("http://#{get_url}/api/v1/issues/generate_issue_data", :headers => headers)
     if response.response.class == Net::HTTPOK
       @projects = Project.visible.sorted
       @data = response.parsed_response
+      signal_success(get_url, headers)
     else
       flash[:error] = l(:error_failed_api_connection)
       redirect_to root_url
@@ -72,6 +73,10 @@ class ServicesController < ApplicationController
 
   def service_params
     params.require(:service).permit(:name, :api_key, :namespace)
+  end
+
+  def signal_success(url, headers)
+    response = HTTParty.post("http://#{url}/api/v1/signal_success", :headers => headers)
   end
 
 end

@@ -10,6 +10,25 @@ module Api
         render json: @plugin
       end
 
+      def signal_success(msg=true)
+        render json: {'status_ok': msg}
+      end
+
+      def create_service
+        qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
+        @service = Service.find_by(api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
+        if @service.nil?
+          @service = Service.new(
+            name: qangaroo_fields["name"],
+            api_key: qangaroo_fields["api_key"],
+            namespace: qangaroo_fields["namespace"],
+          )
+        end
+        if @service.save!
+          signal_success("Successful Connection")
+        end
+      end
+
       private
       def authenticate_key
         key = request.headers['X-Redmine-API-Key']

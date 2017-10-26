@@ -10,6 +10,7 @@ post '/post_issue/:id', to: "services#register_issue", as: :register_issue
 
 namespace :api do
   namespace :v1 do
-    get '/services/verify_qangaroo_plugin', to: 'services#verify_qangaroo_plugin'
+    get '/services/verify_qangaroo_plugin', to: 'services#verify_qangaroo_plugin', as: :api_verify_qangaroo_plugin
+    get '/services/create_service', to: 'services#create_service'
   end
 end

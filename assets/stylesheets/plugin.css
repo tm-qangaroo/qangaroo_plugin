@@ -44,7 +44,7 @@ button#register-button {
   border: none;
   box-shadow: 1px 1px 1px #BFBFC0;
   cursor: pointer;
-  background-color: #BABABA;
+  background-color: #1ab394;
   margin-top: 25px;
   width: 50px
 }
@@ -93,7 +93,7 @@ a.api-info-button {
   border-radius: 3px;
   box-shadow: rgba(0, 0, 0, 0.298039) 0.7px 0.7px 0.7px 0.7px;
   cursor: pointer;
-  background-color: #BABABA;
+  background-color: #1ab394;
 }
 
 .project-info-div {
@@ -166,7 +166,7 @@ table td {
   border: none;
   box-shadow: rgba(0, 0, 0, 0.298039) 0.7px 0.7px 0.7px 0.7px;
   cursor: pointer;
-  background-color: #BABABA;
+  background-color: #1ab394;
   margin: 15px auto 5px;
   display: block;
 }
