@@ -13,5 +13,7 @@ namespace :api do
     get '/services/verify_qangaroo_plugin', to: 'services#verify_qangaroo_plugin', as: :api_verify_qangaroo_plugin
     get '/services/create_service', to: 'services#create_service'
     get '/services/delete_service', to: 'services#delete_service'
+    get '/services/provide_projects', to: 'services#provide_projects'
+    get '/services/get_redmine_fields', to: 'services#get_redmine_fields'
   end
 end

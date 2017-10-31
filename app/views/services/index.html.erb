@@ -7,16 +7,23 @@
   <h1 class="header"><%= l(:heading_api_settings) %></h1>
 </div>
 
-<% @services.each do |service| %>
-  <div class="api-info-div">
-    <h3 class="header"><%= "#{service.name}" %></h3>
-    <hr>
-    <ul>
-      <li><%= "#{l(:namespace)}: http://#{service.namespace}" %></li>
-      <li><%= "#{l(:api_key)}: #{service.api_key}" %></li>
-    </ul>
-    <div class="api-info-buttons">
-      <%= link_to "#{l(:button_qangaroo_connect)}", get_qangaroo_data_path(service.id), {class: "api-info-button"} %>
+<% if @services.length > 0 %>
+  <% @services.each do |service| %>
+    <div class="api-info-div">
+      <h3 class="header"><%= "#{service.name}" %></h3>
+      <hr>
+      <ul>
+        <li><%= "#{l(:namespace)}: http://#{service.namespace}" %></li>
+        <li><%= "#{l(:api_key)}: #{service.api_key}" %></li>
+      </ul>
+      <div class="api-info-buttons">
+        <%= link_to "#{l(:button_qangaroo_connect)}", get_qangaroo_data_path(service.id), {class: "api-info-button"} %>
+      </div>
     </div>
+  <% end %>
+<% else %>
+  <div class="api-info-div">
+    <h3>現在、連携されているQangarooアプリがありません。</h3>
+    <p>連携するのにQangarooアプリの方でRedmine連携設定を行う必要があります。Qangarooアプリで管理者権限でログインしてサイドバーにある「アプリ連携」をクリックしてください。</p>
   </div>
 <% end %>

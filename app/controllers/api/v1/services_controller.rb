@@ -11,10 +11,6 @@ module Api
         render json: {"plugin": @plugin, "redmine_version": @redmine_version}
       end
 
-      def signal_success(msg=true)
-        render json: {'status_ok': msg}
-      end
-
       def create_service
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
         @service = Service.find_by(api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
@@ -30,13 +26,32 @@ module Api
         end
       end
 
+      def provide_projects
+        @projects = Project.visible.sorted
+        @project_hash = {}
+        @projects.map { |proj| @project_hash[proj.id] = proj }
+        render json: @project_hash
+      end
+
+      def get_redmine_fields
+        @field_instances = {}
+        eligible_fields = ["IssueStatus", "IssuePriority", "Tracker"]
+        eligible_fields.each do |eligible_field|
+          @field_instances[eligible_field] = Module.const_get(eligible_field).all
+        end
+        render json: @field_instances
+      end
+
       def delete_service
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
         @service = Service.find_by(api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
         if @service.destroy
           signal_success("Successful Connection")
         end
+      end
 
+      def signal_success(msg=true)
+        render json: {'status_ok': msg}
       end
 
       private
