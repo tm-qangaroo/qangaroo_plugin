@@ -29,7 +29,19 @@ module Api
       end
 
       def register_issue
-        binding.pry
+        data = params.values.first
+        @issue = Issue.new(
+          project_id: data["projectId"].first, #連携先のプロジェクト
+          tracker_id: data["issueTypeId"].second,
+          status_id: 1, #新規
+          author_id: @user.id,
+          subject: data["summary"].second, #タイトル
+        )
+        if @issue.save
+          signal_success("登録できました。")
+        else
+          signal_error(@issue.errors.full_messages)
+        end
       end
 
       def create_service
@@ -57,6 +69,10 @@ module Api
 
       def signal_success(msg=true)
         render json: {'status': msg}
+      end
+
+      def signal_error(msg=true)
+        render json: {'error': msg}
       end
 
       private
