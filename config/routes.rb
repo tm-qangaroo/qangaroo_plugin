@@ -16,5 +16,6 @@ namespace :api do
     get '/services/provide_projects', to: 'services#provide_projects'
     get '/services/get_redmine_fields', to: 'services#get_redmine_fields'
     post '/services/register_issue', to: 'services#register_issue'
+    get '/services/get_updated_issues', to: 'services#get_updated_issues'
   end
 end

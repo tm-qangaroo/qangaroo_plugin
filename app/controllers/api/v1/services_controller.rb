@@ -38,15 +38,31 @@ module Api
           subject: data["summary"].second, #タイトル
         )
         if @issue.save
-          @qangaroo_issue = QangarooIssue.new(issue_id: @issue.id, project_id: @issue.project.id, qangaroo_bug_id: data["bugId"].second, qangaroo_project_id: params.keys.first)
+          @qangaroo_issue = QangarooIssue.new(issue_id: @issue.id, project_id: @issue.project.id, qangaroo_bug_id: data["bugId"], qangaroo_project_id: params.keys.first, updated_at: @issue.updated_on)
           if @qangaroo_issue.save
-            signal_success("登録できました。")
+            res_body = {}
+            res_body["id"] = @qangaroo_issue.id
+            res_body["updated"] = @qangaroo_issue.updated_at
+            signal_success(res_body)
           else
             signal_error(@issue.errors.full_messages)
           end
         else
           signal_error(@issue.errors.full_messages)
         end
+      end
+
+      def get_updated_issues
+        qangaroo_issues = QangarooIssue.all
+        changed_qangaroo_issues = {}
+        results = {}
+        qangaroo_issues.each do |qi|
+          if qi.updated_at != qi.issue.updated_on
+            changed_qangaroo_issues["attributes"] = qi.issue
+          end
+        end
+        results["body"] = changed_qangaroo_issues
+        render json: results
       end
 
       def create_service
