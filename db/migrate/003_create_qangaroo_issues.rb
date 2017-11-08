@@ -6,7 +6,7 @@ class CreateQangarooIssues < ActiveRecord::Migration
       t.integer   :qangaroo_bug_id
       t.integer   :qangaroo_project_id
       t.boolean   :from_redmine, default: false, null: false
-      t.timestamps
+      t.timestamps, null: false
     end
   end
 end

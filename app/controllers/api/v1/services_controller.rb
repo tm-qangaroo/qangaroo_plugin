@@ -38,7 +38,12 @@ module Api
           subject: data["summary"].second, #タイトル
         )
         if @issue.save
-          signal_success("登録できました。")
+          @qangaroo_issue = QangarooIssue.new(issue_id: @issue.id, project_id: @issue.project.id, qangaroo_bug_id: data["bugId"].second, qangaroo_project_id: params.keys.first)
+          if @qangaroo_issue.save
+            signal_success("登録できました。")
+          else
+            signal_error(@issue.errors.full_messages)
+          end
         else
           signal_error(@issue.errors.full_messages)
         end
