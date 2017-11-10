@@ -13,10 +13,8 @@ module Api
       end
 
       def provide_projects
-        @projects = Project.visible.sorted
-        @project_hash = {}
-        @projects.map { |proj| @project_hash[proj.id] = proj }
-        render json: @project_hash
+        @projects = Project.visible.sorted.joins(:trackers).group("projects.id")
+        render json: @projects
       end
 
       def get_redmine_fields
@@ -29,39 +27,53 @@ module Api
       end
 
       def register_issue
-        data = params.values.first
+        data = params
         @issue = Issue.new(
-          project_id: data["projectId"].first, #連携先のプロジェクト
-          tracker_id: data["issueTypeId"].second,
-          status_id: 1, #新規
+          project_id: data["projectId"], #連携先のプロジェクト
+          tracker_id: data["issueTypeId"],
+          status_id: data["statusId"] || IssueStatus.first.try(:id), #新規
           author_id: @user.id,
-          subject: data["summary"].second, #タイトル
+          subject: data["summary"], #タイトル
+          priority_id: data["priorityId"],
+          description: data["description"],
+          due_date: data["dueDate"],
         )
         if @issue.save
-          @qangaroo_issue = QangarooIssue.new(issue_id: @issue.id, project_id: @issue.project.id, qangaroo_bug_id: data["bugId"], qangaroo_project_id: params.keys.first, updated_at: @issue.updated_on)
+          @qangaroo_issue = QangarooIssue.new(issue_id: @issue.id, project_id: @issue.project.id, qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"], updated_at: @issue.updated_on)
           if @qangaroo_issue.save
-            res_body = {}
-            res_body["id"] = @qangaroo_issue.id
-            res_body["updated"] = @qangaroo_issue.updated_at
-            signal_success(res_body)
+            signal_status({"id" => @qangaroo_issue.id, "updated" => @qangaroo_issue.updated_at})
           else
-            signal_error(@issue.errors.full_messages)
+            signal_status(@issue.errors.full_messages)
           end
         else
-          signal_error(@issue.errors.full_messages)
+          signal_status(@issue.errors.full_messages)
+        end
+      end
+
+      def update_issue
+        data = params
+        @qangaroo_issue = QangarooIssue.find_by(qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"])
+        @issue = @qangaroo_issue.issue
+        @issue.assign_attributes(
+          tracker_id: data["issueTypeId"] || @issue.tracker_id,
+          status_id: data["statusId"] || @issue.status_id,
+          subject: data["summary"] || @issue.subject,
+          priority_id: data["priorityId"] || @issue.priority_id,
+          description: data["description"] || @issue.description,
+          due_date: data["dueDate"] || @issue.due_date,
+        )
+        if @issue.save
+          @qangaroo_issue.update_attributes(updated_at: @issue.updated_on)
+          signal_status({"id" => @qangaroo_issue.id, "updated" => @qangaroo_issue.updated_at})
+        else
+          signal_status(@issue.errors.full_messages)
         end
       end
 
       def get_updated_issues
         qangaroo_issues = QangarooIssue.all
-        changed_qangaroo_issues = {}
         results = {}
-        qangaroo_issues.each do |qi|
-          if qi.updated_at != qi.issue.updated_on
-            changed_qangaroo_issues["attributes"] = qi.issue
-          end
-        end
-        results["body"] = changed_qangaroo_issues
+        qangaroo_issues.each { |qi| results[qi.id] = qi.issue }
         render json: results
       end
 
@@ -76,7 +88,7 @@ module Api
           )
         end
         if @service.save!
-          signal_success("Successful Connection")
+          signal_status("Successful Connection")
         end
       end
 
@@ -84,16 +96,12 @@ module Api
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
         @service = Service.find_by(api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
         if @service.destroy
-          signal_success("Successful Connection")
+          signal_status("Successful Connection")
         end
       end
 
-      def signal_success(msg=true)
+      def signal_status(msg=true)
         render json: {'status': msg}
-      end
-
-      def signal_error(msg=true)
-        render json: {'error': msg}
       end
 
       private
