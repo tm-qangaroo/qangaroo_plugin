@@ -18,10 +18,15 @@ module Api
       end
 
       def get_redmine_fields
+        @project = Project.find(params[:id])
         @field_instances = {}
         eligible_fields = ["IssueStatus", "IssuePriority", "Tracker"]
         eligible_fields.each do |eligible_field|
-          @field_instances[eligible_field] = Module.const_get(eligible_field).all
+          if eligible_field == "Tracker"
+            @field_instances[eligible_field] = @project.trackers
+          else
+            @field_instances[eligible_field] = Module.const_get(eligible_field).all
+          end
         end
         render json: @field_instances
       end

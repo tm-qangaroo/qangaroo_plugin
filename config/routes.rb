@@ -14,7 +14,7 @@ namespace :api do
     get '/services/create_service', to: 'services#create_service'
     get '/services/delete_service', to: 'services#delete_service'
     get '/services/provide_projects', to: 'services#provide_projects'
-    get '/services/get_redmine_fields', to: 'services#get_redmine_fields'
+    get '/services/get_redmine_fields/:id', to: 'services#get_redmine_fields'
     post '/services/register_issue', to: 'services#register_issue'
     put '/services/update_issue', to: 'services#update_issue'
     get '/services/get_updated_issues', to: 'services#get_updated_issues'
