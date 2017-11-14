@@ -6,7 +6,7 @@ module Qangaroo
       base.extend(ClassMethods)
       base.send(:include, InstanceMethods)
       base.class_eval do
-        has_many :qangaroo_issues
+        has_many :qangaroo_issues, dependent: :destroy
       end
     end
 
