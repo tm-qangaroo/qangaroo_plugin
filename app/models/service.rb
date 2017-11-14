@@ -2,6 +2,7 @@ class Service < ActiveRecord::Base
   validates :api_key, presence: true
   validates :namespace, presence: true
   belongs_to :user
+  has_many :qangaroo_issues, dependent: :destroy
 
   def self.get_tracker(param)
     if param == "タスク" || nil

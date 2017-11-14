@@ -4,6 +4,7 @@ module Api
       skip_before_action :authenticate_user!
       skip_before_action :verify_authenticity_token, if: :json_request?
       before_action :authenticate_key, except: [:verify_qangaroo_plugin]
+      before_action :load_service, only: [:create_service, :delete_service, :register_issue, :get_updated_issues]
       respond_to :json
 
       def verify_qangaroo_plugin
@@ -44,7 +45,7 @@ module Api
           due_date: data["dueDate"],
         )
         if @issue.save
-          @qangaroo_issue = QangarooIssue.new(issue_id: @issue.id, project_id: @issue.project.id, qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"], updated_at: @issue.updated_on)
+          @qangaroo_issue = QangarooIssue.new(issue_id: @issue.id, project_id: @issue.project.id, qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"], service_id: @service.try(:id), updated_at: @issue.updated_on)
           if @qangaroo_issue.save
             signal_status({"id" => @qangaroo_issue.id, "updated" => @qangaroo_issue.updated_at})
           else
@@ -76,32 +77,28 @@ module Api
       end
 
       def get_updated_issues
-        qangaroo_issues = QangarooIssue.all
         results = {}
-        qangaroo_issues.each { |qi| results[qi.id] = qi.issue }
+        @service.qangaroo_issues.each { |qi| results[qi.id] = qi.issue }
         render json: results
       end
 
       def create_service
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
-        @service = Service.find_by(api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
         if @service.nil?
           @service = Service.new(
             name: qangaroo_fields["name"],
             api_key: qangaroo_fields["api_key"],
             namespace: qangaroo_fields["namespace"],
           )
+          if @service.save!
+            signal_status("Successful Connection")
+          end
         else
           signal_status("Already connected.")
-        end
-        if @service.save!
-          signal_status("Successful Connection")
         end
       end
 
       def delete_service
-        qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
-        @service = Service.find_by(api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
         if @service.destroy
           signal_status("Successful Connection")
         end
@@ -112,6 +109,11 @@ module Api
       end
 
       private
+      def load_service
+        qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
+        @service = Service.find_by(api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
+      end
+
       def authenticate_key
         key = request.headers['X-Redmine-API-Key']
         if key

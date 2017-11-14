@@ -21,16 +21,12 @@
           <td><%= "#{service.namespace}" %></td>
         </tr>
         <tr>
-          <td class="list-header"><%= "#{l(:integrated_projects)}" %></td>
-          <td><%= "#{@projects.length}" %></td>
+          <td class="list-header"><%= "#{l(:api_key)}" %></td>
+          <td><%= "#{service.api_key}" %></td>
         </tr>
         <tr>
           <td class="list-header"><%= "#{l(:integrated_bugs)}" %></td>
-          <td><%= "#{@qangaroo_issues.length}" %></td>
-        </tr>
-        <tr>
-          <td class="list-header"><%= "#{l(:api_key)}" %></td>
-          <td><%= "#{service.api_key}" %></td>
+          <td><%= "#{service.qangaroo_issues.length}" %></td>
         </tr>
       </table>
     </div>
