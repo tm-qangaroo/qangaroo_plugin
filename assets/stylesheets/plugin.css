@@ -15,36 +15,15 @@ html {
   background-color: #F4F6FA;
 }
 
-.header-bar {
-  background-color: #FFFFFF;
-  border-bottom: 1px solid #EEEEEE;
-  margin: -6px -10px -10px -10px;
+.settings-title-div {
+  text-align: center;
+  padding: 10px 10px 0;
 }
 
-.header-bar > .header {
-  padding: 10px 10px 0px;
-}
 
 .header {
   font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-weight: 100;
-}
-
-form#new_service {
-  display: flex;
-  justify-content: space-around;
-}
-
-field {
-  padding: 10px;
-  width: 100%;
-}
-
-field > label {
-  display: block
-}
-field > input {
-  width: 90%;
 }
 
 .api-info-div {
@@ -77,35 +56,6 @@ a.api-info-button {
   background-color: #1ab394;
 }
 
-.project-info-div {
-  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  background-color: #FFFFFF;
-  border: 1px solid #EBEBEB;
-  padding: 10px;
-  margin: 20px 0 10px;
-  margin: 10px;
-  overflow: auto;
-}
-
-.bug-columns {
-  display: inline-block;
-  text-align: left;
-  width: 100%;
-}
-
-.bug-info-div {
-  text-align: center;
-  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  background-color: #FFFFFF;
-  border: 1px solid #EBEBEB;
-  padding: 10px;
-  margin: 20px 0 10px;
-  margin: 10px;
-  display: inline-block;
-  width: 45%;
-  vertical-align: top;
-}
-
 table {
   width: 100%;
   border-spacing: 0;
@@ -124,30 +74,6 @@ table td {
   border: 1px solid #EBEBEB;
 }
 
-.qdata {
-  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-}
-
-.create-issue-div {
-  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  background-color: #FFFFFF;
-  border: 1px solid #EBEBEB;
-  padding: 10px;
-  margin-top: 5px;
-  display: inline-block;
-  width: 100%;
-  vertical-align: top;
-}
-
-.create-ticket {
-  padding: 5px 10px;
-  font-family: "open sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  color: white;
-  border-radius: 3px;
-  border: none;
-  box-shadow: rgba(0, 0, 0, 0.298039) 0.7px 0.7px 0.7px 0.7px;
-  cursor: pointer;
-  background-color: #1ab394;
-  margin: 15px auto 5px;
-  display: block;
+table .list-header {
+  font-weight: 900;
 }

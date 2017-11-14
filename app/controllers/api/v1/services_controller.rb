@@ -91,6 +91,8 @@ module Api
             api_key: qangaroo_fields["api_key"],
             namespace: qangaroo_fields["namespace"],
           )
+        else
+          signal_status("Already connected.")
         end
         if @service.save!
           signal_status("Successful Connection")

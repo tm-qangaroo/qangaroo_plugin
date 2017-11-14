@@ -1,20 +1,43 @@
-<h1>This is the Qangaroo Data Settings Page</h1>
-<table>
-  <tbody>
-    <tr>
-      <th>Priority Settings</th>
-      <% IssuePriority.all.each do |f| %>
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag "plugin.css", :plugin => "qangaroo_plugin", :media => "screen" %>
+<% end %>
+
+<% @services = Service.all; @projects = Project.joins(:qangaroo_issues).uniq; @qangaroo_issues = QangarooIssue.all %>
+
+<div class="settings-title-div">
+  <i class="fa fa-list-alt"></i>
+  <h1 class="header"><%= l(:heading_api_settings) %></h1>
+  <div><%= l(:api_settings_description) %></div>
+</div>
+
+<% if @services.length > 0 %>
+  <% @services.each do |service| %>
+    <div class="api-info-div">
+      <h3 class="header"><%= "#{service.name}" %></h3>
+      <hr>
+      <table>
         <tr>
-          <td>
-            <%= f.name %>
-          </td>
-          <td>
-            <input type="text" id="<%= f.name %>"
-                               value="<%= settings[f.name] %>"
-                               name="<%= settings[f.name] %>" >
-         </td>
+          <td class="list-header"><%= "#{l(:namespace)}" %></td>
+          <td><%= "#{service.namespace}" %></td>
         </tr>
-      <% end %>
-    </tr>
-  </tbody>
-</table>
+        <tr>
+          <td class="list-header"><%= "#{l(:integrated_projects)}" %></td>
+          <td><%= "#{@projects.length}" %></td>
+        </tr>
+        <tr>
+          <td class="list-header"><%= "#{l(:integrated_bugs)}" %></td>
+          <td><%= "#{@qangaroo_issues.length}" %></td>
+        </tr>
+        <tr>
+          <td class="list-header"><%= "#{l(:api_key)}" %></td>
+          <td><%= "#{service.api_key}" %></td>
+        </tr>
+      </table>
+    </div>
+  <% end %>
+<% else %>
+  <div class="api-info-div">
+    <h3><%= l(:no_integration_header) %></h3>
+    <p><%= l(:no_integration_description) %></p>
+  </div>
+<% end %>
