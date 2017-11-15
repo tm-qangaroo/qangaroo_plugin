@@ -112,8 +112,9 @@ module Api
       end
 
       def get_updated_issues
+        @qangaroo_issues = QangarooIssue.where(qangaroo_bug_id: params["id"])
         results = {}
-        @service.qangaroo_issues.each { |qi| results[qi.id] = qi.issue }
+        @qangaroo_issues.each { |qi| results[qi.id] = qi.issue }
         send_response(200, results)
       end
 
