@@ -20,11 +20,11 @@ module Api
       def create_service
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
         if @service.nil?
-          @service = Service.new(
-            name: qangaroo_fields["name"],
-            api_key: qangaroo_fields["api_key"],
-            namespace: qangaroo_fields["namespace"],
-          )
+          if @service = Service.find_by(name: qangaroo_fields["name"], namespace: qangaroo_fields["namespace"])
+            @service.assign_attributes(api_key: qangaroo_fields["api_key"])
+          else
+            @service = Service.new(name: qangaroo_fields["name"], api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
+          end
           if @service.save!
             send_response(200)
           else
@@ -120,7 +120,7 @@ module Api
       private
       def load_service
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
-        @service = Service.find_by(api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
+        @service = Service.find_by(name: qangaroo_fields["name"], api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
       end
 
       def authorize_user
