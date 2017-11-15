@@ -15,3 +15,5 @@ en:
   integrated_bugs: "Integrated Bugs"
   no_integration_header: "You are not connected to Qangaroo."
   no_integration_description: "In order to integrate with Qangaroo, please visit Qangaroo's Redmine Settings Page."
+  unauthorized_user: "User is not authorized."
+  closed_project: "Project is closed."

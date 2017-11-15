@@ -15,3 +15,5 @@ ja:
   integrated_bugs: "Qangarooと連携された障害報告"
   no_integration_header: "現在、連携されているQangarooアプリがありません。"
   no_integration_description: "連携するのにQangarooアプリの方でRedmine連携設定を行う必要があります。Qangarooアプリで管理者権限でログインしてサイドバーにある「アプリ連携」をクリックしてください。"
+  unauthorized_user: "ユーザーは権限がありません。"
+  closed_project: "プロジェクトが終了されています。"

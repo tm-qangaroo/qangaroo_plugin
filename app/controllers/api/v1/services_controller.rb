@@ -10,12 +10,43 @@ module Api
       def verify_qangaroo_plugin
         @redmine_version = Redmine::Info.versioned_name.match(/(\d.\d.\d)/)[1]
         @plugin = Redmine::Plugin.find(:qangaroo_plugin)
-        render json: {"plugin": @plugin, "redmine_version": @redmine_version}
+        if @plugin
+          send_response(200, {plugin: @plugin, redmine_version: @redmine_version})
+        else
+          send_response("Plugin not found.")
+        end
+      end
+
+      def create_service
+        qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
+        if @service.nil?
+          @service = Service.new(
+            name: qangaroo_fields["name"],
+            api_key: qangaroo_fields["api_key"],
+            namespace: qangaroo_fields["namespace"],
+          )
+          if @service.save!
+            send_response(200)
+          else
+            send_response(@service.errors.full_messages)
+          end
+        else
+          send_response(200)
+        end
+      end
+
+      def delete_service
+        if @service.present?
+          @service.destroy
+          send_response(200)
+        else
+          send_response("Redmine側の連携設定が見つかりませんでした。")
+        end
       end
 
       def provide_projects
         @projects = Project.visible.sorted.joins(:trackers).group("projects.id")
-        render json: @projects
+        send_response(200, @projects)
       end
 
       def get_redmine_fields
@@ -29,7 +60,7 @@ module Api
             @field_instances[eligible_field] = Module.const_get(eligible_field).all
           end
         end
-        render json: @field_instances
+        send_response(200, @field_instances)
       end
 
       def register_issue
@@ -44,15 +75,17 @@ module Api
           description: data["description"],
           due_date: data["dueDate"],
         )
+        return send_response(l(:closed_project)) if @issue.project.closed?
+        return send_response(l(:unauthorized_user)) unless authorize_user
         if @issue.save
           @qangaroo_issue = QangarooIssue.new(issue_id: @issue.id, project_id: @issue.project.id, qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"], service_id: @service.try(:id), updated_at: @issue.updated_on)
           if @qangaroo_issue.save
-            signal_status({"id" => @qangaroo_issue.id, "updated" => @qangaroo_issue.updated_at})
+            send_response(200, {"id" => @qangaroo_issue.id, "updated" => @qangaroo_issue.updated_at})
           else
-            signal_status(@issue.errors.full_messages)
+            send_response(@issue.errors.full_messages)
           end
         else
-          signal_status(@issue.errors.full_messages)
+          send_response(@issue.errors.full_messages)
         end
       end
 
@@ -60,6 +93,8 @@ module Api
         data = params
         @qangaroo_issue = QangarooIssue.find_by(qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"])
         @issue = @qangaroo_issue.issue
+        return send_response(l(:closed_project)) if @issue.project.closed?
+        return send_response(l(:unauthorized_user)) unless authorize_user
         @issue.assign_attributes(
           tracker_id: data["issueTypeId"] || @issue.tracker_id,
           status_id: data["statusId"] || @issue.status_id,
@@ -70,48 +105,26 @@ module Api
         )
         if @issue.save
           @qangaroo_issue.update_attributes(updated_at: @issue.updated_on)
-          signal_status({"id" => @qangaroo_issue.id, "updated" => @qangaroo_issue.updated_at})
+          send_response(200, {"id" => @qangaroo_issue.id, "updated" => @qangaroo_issue.updated_at})
         else
-          signal_status(@issue.errors.full_messages)
+          send_response(@issue.errors.full_messages)
         end
       end
 
       def get_updated_issues
         results = {}
         @service.qangaroo_issues.each { |qi| results[qi.id] = qi.issue }
-        render json: results
-      end
-
-      def create_service
-        qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
-        if @service.nil?
-          @service = Service.new(
-            name: qangaroo_fields["name"],
-            api_key: qangaroo_fields["api_key"],
-            namespace: qangaroo_fields["namespace"],
-          )
-          if @service.save!
-            signal_status("Successful Connection")
-          end
-        else
-          signal_status("Already connected.")
-        end
-      end
-
-      def delete_service
-        if @service.destroy
-          signal_status("Successful Connection")
-        end
-      end
-
-      def signal_status(msg=true)
-        render json: {'status': msg}
+        send_response(200, results)
       end
 
       private
       def load_service
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
         @service = Service.find_by(api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
+      end
+
+      def authorize_user
+        return @user.allowed_to?(:add_issues, @issue.project, global: true) ? true : false
       end
 
       def authenticate_key
@@ -135,6 +148,11 @@ module Api
         request.format = :json unless request.format.json?
         return request.format.json?
       end
+
+      def send_response(status, body=nil)
+        render json: {status: status, body: body}
+      end
+
     end
   end
 end
