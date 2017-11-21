@@ -10,5 +10,7 @@ Redmine::Plugin.register :qangaroo_plugin do
   url 'https://qangaroo.jp'
   author_url 'https://tcmobile.jp'
 
+  requires_redmine version_or_higher: '3.2.8'
+
   settings partial: 'settings/qangaroo_data_setting', default: {}
 end
