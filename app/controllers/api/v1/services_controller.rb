@@ -69,7 +69,7 @@ module Api
           project_id: data["projectId"], #連携先のプロジェクト
           tracker_id: data["issueTypeId"],
           status_id: data["statusId"] || IssueStatus.first.try(:id), #新規
-          author_id: @user.id,
+          author_id: @reporter.try(:id) || @user.try(:id),
           subject: data["summary"], #タイトル
           priority_id: data["priorityId"],
           description: data["description"],
@@ -82,7 +82,7 @@ module Api
           if @qangaroo_issue.save
             send_response(200, {"id" => @qangaroo_issue.id, "updated" => @qangaroo_issue.updated_at})
           else
-            send_response(@issue.errors.full_messages)
+            send_response(@qangaroo_issue.errors.full_messages)
           end
         else
           send_response(@issue.errors.full_messages)
@@ -122,6 +122,10 @@ module Api
       def load_service
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
         @service = Service.find_by(name: qangaroo_fields["name"], api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
+        if key = qangaroo_fields["personal_key"]
+          @reporter = User.find_by_api_key(key)
+        end
+        send_response("Service not found.") if @service.nil?
       end
 
       def authorize_user
