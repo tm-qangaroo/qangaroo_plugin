@@ -2,7 +2,7 @@
 ja:
   button_qangaroo_connect: "Qangarooと連携する"
   namespace: "ネームスペース"
-  api_key: "APIキー"
+  api_key: "デフォルトAPIキー"
   heading_api_settings: "連携設定"
   api_settings_description: "連携設定の変更はQangaroo側で行ってください。"
   heading_qangaroo_data: "Qangarooデーター"

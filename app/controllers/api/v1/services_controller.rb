@@ -4,7 +4,7 @@ module Api
       skip_before_action :authenticate_user!
       skip_before_action :verify_authenticity_token, if: :json_request?
       before_action :authenticate_key, except: [:verify_qangaroo_plugin]
-      before_action :load_service, only: [:create_service, :delete_service, :register_issue, :get_updated_issues]
+      before_action :load_service, only: [:delete_service, :register_issue, :update_issue, :get_updated_issues]
       respond_to :json
 
       def verify_qangaroo_plugin
@@ -19,25 +19,20 @@ module Api
 
       def create_service
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
-        if @service.nil?
-          if @service = Service.find_by(name: qangaroo_fields["name"], namespace: qangaroo_fields["namespace"])
-            @service.assign_attributes(api_key: qangaroo_fields["api_key"])
-          else
-            @service = Service.new(name: qangaroo_fields["name"], api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
-          end
-          if @service.save!
-            send_response(200)
-          else
+        if @service = Service.find_by(namespace: qangaroo_fields["namespace"])
+          @service.verify_and_update(qangaroo_fields)
+        else
+          @service = Service.new(name: qangaroo_fields["name"], api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
+          unless @service.save!
             send_response(@service.errors.full_messages)
           end
-        else
-          send_response(200)
         end
+        send_response(200)
       end
 
       def delete_service
         if @service.present?
-          @service.destroy
+          @service.update_attributes(active: false)
           send_response(200)
         else
           send_response("Redmine側の連携設定が見つかりませんでした。")
@@ -78,7 +73,7 @@ module Api
         return send_response(l(:closed_project)) if @issue.project.closed?
         return send_response(l(:unauthorized_user)) unless authorize_user
         if @issue.save
-          @qangaroo_issue = QangarooIssue.new(issue_id: @issue.id, project_id: @issue.project.id, qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"], service_id: @service.try(:id), updated_at: @issue.updated_on)
+          @qangaroo_issue = @service.qangaroo_issues.build(issue_id: @issue.id, project_id: @issue.project.id, qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"], updated_at: @issue.updated_on)
           if @qangaroo_issue.save
             send_response(200, {"id" => @qangaroo_issue.id, "updated" => @qangaroo_issue.updated_at})
           else
@@ -91,7 +86,7 @@ module Api
 
       def update_issue
         data = params
-        @qangaroo_issue = QangarooIssue.find_by(qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"])
+        @qangaroo_issue = @service.qangaroo_issues.find_by(qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"])
         @issue = @qangaroo_issue.issue
         return send_response(l(:closed_project)) if @issue.project.closed?
         return send_response(l(:unauthorized_user)) unless authorize_user
@@ -112,7 +107,7 @@ module Api
       end
 
       def get_updated_issues
-        @qangaroo_issues = QangarooIssue.where(qangaroo_bug_id: params["id"])
+        @qangaroo_issues = @service.qangaroo_issues.where(qangaroo_bug_id: params["id"])
         results = {}
         @qangaroo_issues.each { |qi| results[qi.id] = qi.issue }
         send_response(200, results)
@@ -121,11 +116,14 @@ module Api
       private
       def load_service
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
-        @service = Service.find_by(name: qangaroo_fields["name"], api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
-        if key = qangaroo_fields["personal_key"]
-          @reporter = User.find_by_api_key(key)
+        if @service = Service.find_by(namespace: qangaroo_fields["namespace"])
+          @service.verify_and_update(qangaroo_fields)
+          if key = qangaroo_fields["personal_key"]
+            @reporter = User.find_by_api_key(key)
+          end
+        else
+          send_response("Service not found.") if @service.nil?
         end
-        send_response("Service not found.") if @service.nil?
       end
 
       def authorize_user

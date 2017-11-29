@@ -2,7 +2,7 @@
 en:
   button_qangaroo_connect: "Connect with Qangaroo"
   namespace: "Namespace"
-  api_key: "API Key"
+  api_key: "Default API Key"
   heading_api_settings: "API Settings"
   api_settings_description: "In order to customize integration settings with Qangaroo, please visit Qangaroo's Redmine Settings Page."
   heading_qangaroo_data: "Qangaroo Data"

@@ -4,29 +4,9 @@ class Service < ActiveRecord::Base
   belongs_to :user
   has_many :qangaroo_issues, dependent: :destroy
 
-  def self.get_tracker(param)
-    if param == "タスク" || nil
-      return 1
-    elsif param == "バグ"
-      return 2
-    else
-      return 3
-    end
+  def verify_and_update(qangaroo_fields)
+    self.update(name: qangaroo_fields["name"]) if self.name != qangaroo_fields["name"]
+    self.update(api_key: qangaroo_fields["api_key"]) if self.api_key != qangaroo_fields["api_key"]
+    self.update(active: true) unless self.active
   end
-
-  def self.get_priority(param)
-    return nil if !param
-    if param == "trivial"
-      return 1
-    elsif param == "minor"
-      return 2
-    elsif param == "major"
-      return 3
-    elsif param == "critical"
-      return 4
-    elsif param == "blocker"
-      return 5
-    end
-  end
-
 end

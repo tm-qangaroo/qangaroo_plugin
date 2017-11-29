@@ -2,7 +2,7 @@
   <%= stylesheet_link_tag "plugin.css", :plugin => "qangaroo_plugin", :media => "screen" %>
 <% end %>
 
-<% @services = Service.all; @projects = Project.joins(:qangaroo_issues).uniq; @qangaroo_issues = QangarooIssue.all %>
+<% @services = Service.where(active: true); @projects = Project.joins(:qangaroo_issues).uniq; @qangaroo_issues = QangarooIssue.all %>
 
 <div class="settings-title-div">
   <i class="fa fa-list-alt"></i>
