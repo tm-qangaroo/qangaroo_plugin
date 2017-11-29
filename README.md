@@ -1,15 +1,15 @@
 # プラグインインストール #
 このプラグインはQangarooと連携するためのRedmineプラグインです。バージョン3.2.8以上のRedmineに対応します。
-Redmineバージョンをアップグレードする必要があるなら、http://guide.redmine.jp/RedmineUpgrade/ を参考してください。
+Redmineバージョンをアップグレードする必要がある場合は、http://guide.redmine.jp/RedmineUpgrade/ を参考してください。
 
 **下記の手順通りにプラグインをインストールしてください。**
 1. redmineアプリの`./plugins`フォルダに入る
-2. `plugins`のフォルダの中に入ると下記のコマンド
+2. `plugins`のフォルダの中で下記のコマンドを実行
   * `git clone https://github.com/tm-qangaroo/qangaroo_plugin.git`
 3. redmineアプリのrootフォルダに戻る
 4. gemのインストール。
   * `bundle install --without development test`
-5. データベースのマイグレーションとアセッツのコピー
+5. データベースのマイグレーションとアセットのコピー
   * `bundle exec rake redmine:plugins:migrate RAILS_ENV=production`
   * `bundle exec rake redmine:plugins NAME=qangaroo_plugin RAILS_ENV=production`
 6. redmineアプリのサーバを再起動。
