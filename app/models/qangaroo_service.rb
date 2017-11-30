@@ -1,4 +1,4 @@
-class Service < ActiveRecord::Base
+class QangarooService < ActiveRecord::Base
   validates :api_key, presence: true
   validates :namespace, presence: true
   belongs_to :user

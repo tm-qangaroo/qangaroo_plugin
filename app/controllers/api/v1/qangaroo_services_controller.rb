@@ -1,6 +1,6 @@
 module Api
   module V1
-    class Api::V1::ServicesController < ApplicationController
+    class Api::V1::QangarooServicesController < ApplicationController
       skip_before_action :authenticate_user!
       skip_before_action :verify_authenticity_token, if: :json_request?
       before_action :authenticate_key, except: [:verify_qangaroo_plugin]
@@ -19,10 +19,10 @@ module Api
 
       def create_service
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
-        if @service = Service.find_by(namespace: qangaroo_fields["namespace"])
+        if @service = QangarooService.find_by(namespace: qangaroo_fields["namespace"])
           @service.verify_and_update(qangaroo_fields)
         else
-          @service = Service.new(name: qangaroo_fields["name"], api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
+          @service = QangarooService.new(name: qangaroo_fields["name"], api_key: qangaroo_fields["api_key"], namespace: qangaroo_fields["namespace"])
           unless @service.save!
             send_response(@service.errors.full_messages)
           end
@@ -116,7 +116,7 @@ module Api
       private
       def load_service
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
-        if @service = Service.find_by(namespace: qangaroo_fields["namespace"])
+        if @service = QangarooService.find_by(namespace: qangaroo_fields["namespace"])
           @service.verify_and_update(qangaroo_fields)
           if key = qangaroo_fields["personal_key"]
             @reporter = User.find_by_api_key(key)

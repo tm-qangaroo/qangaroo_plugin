@@ -3,13 +3,13 @@
 
 namespace :api do
   namespace :v1 do
-    get '/services/verify_qangaroo_plugin', to: 'services#verify_qangaroo_plugin', as: :api_verify_qangaroo_plugin
-    get '/services/create_service', to: 'services#create_service'
-    get '/services/delete_service', to: 'services#delete_service'
-    get '/services/provide_projects', to: 'services#provide_projects'
-    get '/services/get_redmine_fields/:id', to: 'services#get_redmine_fields'
-    post '/services/register_issue', to: 'services#register_issue'
-    post '/services/get_updated_issues', to: 'services#get_updated_issues'
-    put '/services/update_issue', to: 'services#update_issue'
+    get '/qangaroo_services/verify_qangaroo_plugin', to: 'qangaroo_services#verify_qangaroo_plugin', as: :api_verify_qangaroo_plugin
+    get '/qangaroo_services/create_service', to: 'qangaroo_services#create_service'
+    get '/qangaroo_services/delete_service', to: 'qangaroo_services#delete_service'
+    get '/qangaroo_services/provide_projects', to: 'qangaroo_services#provide_projects'
+    get '/qangaroo_services/get_redmine_fields/:id', to: 'qangaroo_services#get_redmine_fields'
+    post '/qangaroo_services/register_issue', to: 'qangaroo_services#register_issue'
+    post '/qangaroo_services/get_updated_issues', to: 'qangaroo_services#get_updated_issues'
+    put '/qangaroo_services/update_issue', to: 'qangaroo_services#update_issue'
   end
 end
