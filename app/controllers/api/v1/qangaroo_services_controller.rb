@@ -59,21 +59,12 @@ module Api
       end
 
       def register_issue
-        data = params
-        @issue = Issue.new(
-          project_id: data["projectId"], #連携先のプロジェクト
-          tracker_id: data["issueTypeId"],
-          status_id: data["statusId"] || IssueStatus.first.try(:id), #新規
-          author_id: @reporter.try(:id) || @user.try(:id),
-          subject: data["summary"], #タイトル
-          priority_id: data["priorityId"],
-          description: data["description"],
-          due_date: data["dueDate"],
-        )
+        @issue = Issue.new(issue_params)
+        @issue.assign_attributes(status: IssueStatus.try(:first)) if @issue.status_id.nil?
         return send_response(l(:closed_project)) if @issue.project.closed?
         return send_response(l(:unauthorized_user)) unless authorize_user
         if @issue.save
-          @qangaroo_issue = @service.qangaroo_issues.build(issue_id: @issue.id, project_id: @issue.project.id, qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"], updated_at: @issue.updated_on)
+          @qangaroo_issue = @service.qangaroo_issues.build(qangaroo_issue_params)
           if @qangaroo_issue.save
             send_response(200, {"id" => @qangaroo_issue.id, "updated" => @qangaroo_issue.updated_at})
           else
@@ -85,19 +76,12 @@ module Api
       end
 
       def update_issue
-        data = params
+        data = params.require(:qangaroo_issue)
         @qangaroo_issue = @service.qangaroo_issues.find_by(qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"])
         @issue = @qangaroo_issue.issue
         return send_response(l(:closed_project)) if @issue.project.closed?
         return send_response(l(:unauthorized_user)) unless authorize_user
-        @issue.assign_attributes(
-          tracker_id: data["issueTypeId"] || @issue.tracker_id,
-          status_id: data["statusId"] || @issue.status_id,
-          subject: data["summary"] || @issue.subject,
-          priority_id: data["priorityId"] || @issue.priority_id,
-          description: data["description"] || @issue.description,
-          due_date: data["dueDate"] || @issue.due_date,
-        )
+        @issue.assign_attributes(issue_params)
         if @issue.save
           @qangaroo_issue.update_attributes(updated_at: @issue.updated_on)
           send_response(200, {"id" => @qangaroo_issue.id, "updated" => @qangaroo_issue.updated_at})
@@ -114,6 +98,14 @@ module Api
       end
 
       private
+      def issue_params
+        params.require(:issue).permit(:projectId, :issueTypeId, :statusId, :summary, :priorityId, :description, :dueDate).merge(author_id: @reporter.try(:id) || @user.try(:id))
+      end
+
+      def qangaroo_issue_params
+        params.require(:qangaroo_issue).permit(:bugId, :qangarooProjectId).merge(issue_id: @issue.id, project_id: @issue.project.id, updated_at: @issue.updated_on)
+      end
+
       def load_service
         qangaroo_fields = JSON.parse(request.headers["X-Qangaroo-Fields"])
         if @service = QangarooService.find_by(namespace: qangaroo_fields["namespace"])

@@ -7,6 +7,12 @@ module Qangaroo
       base.send(:include, InstanceMethods)
       base.class_eval do
         has_one :qangaroo_issue, dependent: :destroy
+        alias_attribute :issueTypeId, :tracker_id
+        alias_attribute :statusId, :status_id
+        alias_attribute :priorityId, :priority_id
+        alias_attribute :projectId, :project_id
+        alias_attribute :summary, :subject
+        alias_attribute :dueDate, :due_date
       end
     end
 
