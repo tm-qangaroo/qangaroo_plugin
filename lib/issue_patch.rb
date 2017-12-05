@@ -13,6 +13,7 @@ module Qangaroo
         alias_attribute :projectId, :project_id
         alias_attribute :summary, :subject
         alias_attribute :dueDate, :due_date
+        alias_attribute :assigneeId, :assigned_to_id
         after_update :update_qangaroo_issue
 
         def update_qangaroo_issue
@@ -27,7 +28,7 @@ module Qangaroo
                 request = Net::HTTP::Post.new(uri.path, {'Content-Type' => 'application/json'})
                 request.body = results.to_json
                 request.add_field("X-Qangaroo-API-Key", service.api_key)
-                
+
                 res = http.request(request)
               end
             rescue

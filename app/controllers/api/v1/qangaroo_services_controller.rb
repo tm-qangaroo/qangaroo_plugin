@@ -99,7 +99,7 @@ module Api
 
       private
       def issue_params
-        params.require(:issue).permit(:projectId, :issueTypeId, :statusId, :summary, :priorityId, :description, :dueDate).merge(author_id: @reporter.try(:id) || @user.try(:id))
+        params.require(:issue).permit(:projectId, :issueTypeId, :statusId, :summary, :priorityId, :description, :dueDate, :assigneeId).merge(author_id: @reporter.try(:id) || @user.try(:id))
       end
 
       def qangaroo_issue_params
