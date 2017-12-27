@@ -10,8 +10,9 @@ module Api
       def verify_qangaroo_plugin
         @redmine_version = Redmine::Info.versioned_name.match(/(\d.\d.\d)/)[1]
         @plugin = Redmine::Plugin.find(:qangaroo_plugin)
+        ssl = request.ssl? ? true : false
         if @plugin
-          send_response(200, {plugin: @plugin, redmine_version: @redmine_version})
+          send_response(200, {plugin: @plugin, redmine_version: @redmine_version, ssl: ssl})
         else
           send_response("Plugin not found.")
         end

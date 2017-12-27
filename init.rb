@@ -6,7 +6,7 @@ Redmine::Plugin.register :qangaroo_plugin do
   name 'Qangaroo Plugin'
   author 'Technomobile'
   description 'QangarooとRedmine連携するためのプラグインです。'
-  version '1.0.0'
+  version '1.0.1'
   url 'https://qangaroo.jp'
   author_url 'https://tcmobile.jp'
 

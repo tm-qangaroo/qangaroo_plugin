@@ -14,7 +14,6 @@ module Qangaroo
         alias_attribute :summary, :subject
         alias_attribute :dueDate, :due_date
         alias_attribute :assigneeId, :assigned_to_id
-        after_update :update_qangaroo_issue
 
         def update_qangaroo_issue
           if self.qangaroo_issue.present?
