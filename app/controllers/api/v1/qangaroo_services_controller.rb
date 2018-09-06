@@ -2,6 +2,7 @@ module Api
   module V1
     class Api::V1::QangarooServicesController < ApplicationController
       skip_before_action :authenticate_user!
+      skip_before_action :check_if_login_required
       skip_before_action :verify_authenticity_token, if: :json_request?
       before_action :authenticate_key, except: [:verify_qangaroo_plugin]
       before_action :load_service, only: [:delete_service, :register_issue, :update_issue, :get_updated_issues]
