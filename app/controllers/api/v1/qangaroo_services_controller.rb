@@ -9,7 +9,7 @@ module Api
       respond_to :json
 
       def verify_qangaroo_plugin
-        @redmine_version = Redmine::Info.versioned_name.match(/(\d+\.\d+\.\d+)/)[1]
+        @redmine_version = Redmine::Info.versioned_name.slice(/\d+\.\d+\.\d+/)
         @plugin = Redmine::Plugin.find(:qangaroo_plugin)
         ssl = request.ssl? ? true : false
         if @plugin
