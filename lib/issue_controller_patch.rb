@@ -1,6 +1,6 @@
 require_dependency 'issues_controller'
 
-module IssuesControllerPatch
+module IssueControllerPatch
   def self.included(base)
     base.send(:include, InstanceMethods)
     base.class_eval do

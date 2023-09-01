@@ -1,4 +1,4 @@
-class CreateQangarooIssues < ActiveRecord::Migration
+class CreateQangarooIssues < ActiveRecord::Migration[4.2]
   def change
     create_table :qangaroo_issues do |t|
       t.integer   :issue_id

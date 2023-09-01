@@ -1,4 +1,4 @@
-class RenameServiceToQangarooService < ActiveRecord::Migration
+class RenameServiceToQangarooService < ActiveRecord::Migration[4.2]
   def up
     rename_table :services, :qangaroo_services
   end
