@@ -1,4 +1,4 @@
-class AddAssociationToUser < ActiveRecord::Migration
+class AddAssociationToUser < ActiveRecord::Migration[4.2]
   def up
     add_column :services, :user_id, :integer
   end

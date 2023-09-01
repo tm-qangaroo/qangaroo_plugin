@@ -17,3 +17,4 @@ en:
   no_integration_description: "In order to integrate with Qangaroo, please visit Qangaroo's Redmine Settings Page."
   unauthorized_user: "User is not authorized."
   closed_project: "Project is closed."
+  ticket_not_exist: "Ticket does not exist."

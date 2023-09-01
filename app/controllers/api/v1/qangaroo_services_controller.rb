@@ -1,7 +1,7 @@
 module Api
   module V1
     class Api::V1::QangarooServicesController < ApplicationController
-      skip_before_action :authenticate_user!
+      # skip_before_action :authenticate_user!
       skip_before_action :check_if_login_required
       skip_before_action :verify_authenticity_token, if: :json_request?
       before_action :authenticate_key, except: [:verify_qangaroo_plugin]
@@ -34,7 +34,7 @@ module Api
 
       def delete_service
         if @service.present?
-          @service.update_attributes(active: false)
+          @service.update(active: false)
           send_response(200)
         else
           send_response("Redmine側の連携設定が見つかりませんでした。")
@@ -42,7 +42,7 @@ module Api
       end
 
       def provide_projects
-        @projects = Project.visible.sorted.joins(:trackers).group("projects.id")
+        @projects = Project.visible(@user).sorted.joins(:trackers).group("projects.id")
         send_response(200, @projects)
       end
 
@@ -61,7 +61,11 @@ module Api
       end
 
       def register_issue
-        @issue = Issue.new(issue_params)
+        @issue = Issue.new(:project_id => issue_params["projectId"], :tracker_id => issue_params["issueTypeId"],
+                            :author_id => @reporter.try(:id) || @user.try(:id),
+                            :status_id => issue_params["statusId"], :priority => IssuePriority.find(issue_params["priorityId"]),
+                            :subject => issue_params["summary"],
+                            :description => issue_params["description"], :due_date => issue_params["dueDate"])
         @issue.assign_attributes(status: IssueStatus.try(:first)) if @issue.status_id.nil?
         return send_response(l(:closed_project)) if @issue.project.closed?
         return send_response(l(:unauthorized_user)) unless authorize_user
@@ -80,12 +84,17 @@ module Api
       def update_issue
         data = params.require(:qangaroo_issue)
         @qangaroo_issue = @service.qangaroo_issues.find_by(qangaroo_bug_id: data["bugId"], qangaroo_project_id: data["qangarooProjectId"])
+        return send_response(l(:ticket_not_exist)) if @qangaroo_issue.nil?
         @issue = @qangaroo_issue.issue
+        return send_response(l(:ticket_not_exist)) if @issue.nil?
         return send_response(l(:closed_project)) if @issue.project.closed?
         return send_response(l(:unauthorized_user)) unless authorize_user
-        @issue.assign_attributes(issue_params)
+        @issue.assign_attributes({:subject => issue_params["summary"], :description => issue_params["description"],
+                                  :status_id => issue_params["statusId"], :priority => IssuePriority.find(issue_params["priorityId"]),
+                                  :tracker_id => issue_params["issueTypeId"], :due_date => issue_params["dueDate"],
+                                  :author_id => @reporter.try(:id) || @user.try(:id)})
         if @issue.save
-          @qangaroo_issue.update_attributes(updated_at: @issue.updated_on)
+          @qangaroo_issue.update(updated_at: @issue.updated_on)
           send_response(200, {"id" => @qangaroo_issue.id, "updated" => @qangaroo_issue.updated_at})
         else
           send_response(@issue.errors.full_messages)

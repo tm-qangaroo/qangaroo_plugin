@@ -44,7 +44,7 @@ module Qangaroo
     end
   end
 
-  ActionDispatch::Callbacks.to_prepare do
+  ActiveSupport::Reloader.to_prepare do
     Issue.send(:include, Qangaroo::IssuePatch)
   end
 end
