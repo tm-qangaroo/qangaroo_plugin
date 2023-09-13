@@ -1,3 +1,3 @@
 gem "httparty"
 gem "font-awesome-rails"
-gem 'responders', '~> 2.0'
+gem 'responders', '~> 3.1'

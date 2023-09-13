@@ -1,5 +1,5 @@
 # プラグインインストール #
-このプラグインはQangarooと連携するためのRedmineプラグインです。バージョン3.2.8以上のRedmineに対応します。
+このプラグインはQangarooと連携するためのRedmineプラグインです。バージョン5.0.5以上のRedmineに対応します。
 Redmineバージョンをアップグレードする必要がある場合は、http://guide.redmine.jp/RedmineUpgrade/ を参考してください。
 
 **下記の手順通りにプラグインをインストールしてください。**
@@ -15,7 +15,7 @@ Redmineバージョンをアップグレードする必要がある場合は、h
 6. redmineアプリのサーバを再起動。
 
 # Plugin Installation Guide #
-This is a Redmine plugin designed to integrate Redmine with Qangaroo. It works with Redmine version 3.2.8 or above.
+This is a Redmine plugin designed to integrate Redmine with Qangaroo. It works with Redmine version 5.0.5 or above.
 For those who need to upgrade their Redmine, please see http://www.redmine.org/projects/redmine/wiki/RedmineUpgrade.
 
 **Follow the instructions below to install the plugin.**

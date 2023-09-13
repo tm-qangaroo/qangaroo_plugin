@@ -17,3 +17,4 @@ ja:
   no_integration_description: "連携するのにQangarooアプリの方でRedmine連携設定を行う必要があります。Qangarooアプリで管理者権限でログインしてサイドバーにある「アプリ連携」をクリックしてください。"
   unauthorized_user: "ユーザーは権限がありません。"
   closed_project: "プロジェクトが終了されています。"
+  ticket_not_exist: "チケットが存在しません。"
